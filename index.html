@@ -1,0 +1,33 @@
+<canvas id='#canvas'></canvas>
+
+<script>
+
+/// constantes
+const canvas = document.getElementById('#canvas');
+const ctx = canvas.getContext('2d');
+const dimensoes_tela = {largura: 640, altura: 480};
+const vetor_tela = [];
+const matriz_tela = [[]];
+
+/// estilizações
+canvas.width = dimensoes_tela.largura;
+canvas.height = dimensoes_tela.altura;
+canvas.style.backgroundColor = 'black';
+canvas.style.outline = '2px dashed red';
+
+/// controles
+const teclas_mapeadas =
+{
+    KeyW: true,
+    KeyA: true,
+    KeyS: true,
+    KeyD: true
+}
+const controle_mover = function controle_mover()
+{
+    if (!teclas_mapeadas[event.code]) return;
+    event.preventDefault();
+}
+document.addEventListener('keydown', controle_mover);
+
+</script>
