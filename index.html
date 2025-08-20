@@ -6,8 +6,24 @@
 const canvas = document.getElementById('#canvas');
 const ctx = canvas.getContext('2d');
 const dimensoes_tela = {largura: 640, altura: 480};
-const vetor_tela = [];
-const matriz_tela = [[]];
+const vetor_tela = [0];
+const matriz_tela = [[0]];
+const jogador =
+{
+    posicao: {horizontal: 0, vertical: 0},
+    dimensoes: {largura: 10, altura: 10},
+    velocidade: 1,
+    mover: function mover()
+    {
+        for (const tecla in teclas_mapeadas)
+        {
+            if (teclas_pressionadas[tecla])
+            {
+                funcoes_mapeadas[tecla].call();
+            }
+        }
+    }
+};
 
 /// estilizações
 canvas.width = dimensoes_tela.largura;
@@ -22,12 +38,55 @@ const teclas_mapeadas =
     KeyA: true,
     KeyS: true,
     KeyD: true
+};
+const teclas_pressionadas = {};
+const funcoes_mapeadas =
+{
+    KeyW: function mover_cima()
+    {
+        jogador.posicao.vertical += jogador.velocidade;
+    },
+    KeyA: function mover_esquerda()
+    {
+        jogador.posicao.horizontal -= jogador.velocidade;
+    },
+    KeyS: function mover_baixo()
+    {
+        jogador.posicao.vertical -= jogador.velocidade;
+    },
+    KeyD: function mover_direita()
+    {
+        jogador.posicao.horizontal += jogador.velocidade;
+    }
+};
+
+/// pintura
+const loop_desenho = function loop_desenho(marco_tempo)
+{
+    //
+    jogador.mover();
+    ctx.reset();
+    ctx.rect(jogador.posicao.horizontal, -jogador.posicao.vertical, jogador.dimensoes.largura, jogador.dimensoes.altura);
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+    window.requestAnimationFrame(loop_desenho);
 }
-const controle_mover = function controle_mover()
+
+/// eventos
+const controle_keydown = function controle_keydown()
 {
     if (!teclas_mapeadas[event.code]) return;
     event.preventDefault();
-}
-document.addEventListener('keydown', controle_mover);
+    teclas_pressionadas[event.code] = true;
+};
+const controle_keyup = function controle_keyup()
+{
+    if (!teclas_mapeadas[event.code]) return;
+    event.preventDefault();
+    teclas_pressionadas[event.code] = false;
+};
+window.addEventListener('keydown', controle_keydown);
+window.addEventListener('keyup', controle_keyup);
+window.requestAnimationFrame(loop_desenho);
 
 </script>
